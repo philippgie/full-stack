@@ -1,22 +1,26 @@
 import { useState } from 'react'
 
 const Statistics = ({good, neutral, bad}) => {
-        if (!good && !neutral && !bad) {
-            return (
-                    <>
-                    <h1> statistics</h1>
-                    <p>No feedback given</p>
-                    </>
-                   )
-        }
+    if (!good && !neutral && !bad) {
+        return (
+                <>
+                <h1> statistics</h1>
+                <p>No feedback given</p>
+                </>
+               )
+    }
     return (
             <>
             <h1> statistics</h1>
+            <table>
+            <tbody>
             <StatisticLine name="good" value={good}/>
             <StatisticLine name="neutral" value={neutral}/>
             <StatisticLine name="bad" value={bad}/>
             <Average good={good} neutral={neutral} bad={bad}/>
             <Percentage good={good} neutral={neutral} bad={bad}/>
+            </tbody>
+            </table>
             </>
            )
 }
@@ -30,7 +34,13 @@ const Percentage = ({good, neutral, bad}) => {
 }
 
 const StatisticLine = ({name, value}) => {
-    return <p>{name} {value}</p>
+    //return <p>{name} {value}</p>
+    return (
+            <tr>
+            <td>{name}</td>
+            <td>{value}</td>
+            </tr>
+           )
 }
 
 const Button = (props) => (
