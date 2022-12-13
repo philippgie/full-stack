@@ -42,9 +42,18 @@ const App = () => {
             alert(`${newName} is already added to phonebook`) 
             return
         }
-        setPersons(persons.concat({name: newName, number:newNumber}))
+        const personObject = {name:newName, number:newNumber}
         setNewName('')
         setNewNumber('')
+        axios
+            .post(`http://localhost:3001/persons`, personObject)
+            .then(response => {
+                      //setPersons(persons.map(person => person.id !== id ? person : response.data))
+                      setPersons(persons.concat(response.data))
+            })
+            .catch(error => {
+                console.log('fail', error)
+            })
     }
 
     const contactsToShow = !newSearch
