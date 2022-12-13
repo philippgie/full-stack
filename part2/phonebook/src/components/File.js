@@ -25,7 +25,7 @@ const Persons = ({contactsToShow, deletePerson}) => {
     return (
 
         <ul>
-            {contactsToShow.map(person=><Person key={person.name} person={person} deletePerson={deletePerson}/>)}
+            {contactsToShow.map(person=><Person key={person.id} person={person} deletePerson={deletePerson}/>)}
         </ul>
     )
 }

@@ -37,22 +37,37 @@ const App = () => {
 
     const addPerson = (event) => {
         event.preventDefault()
-        if(persons.some(person=>person.name === newName)) {
-            alert(`${newName} is already added to phonebook`) 
-            return
+        const person = persons.find(n => n.name === newName)
+        if(person) {
+            if(window.confirm(`${newName} is already added to phonebook, replace the old number with a new onw?`)) {
+                const updatedPerson = {...person, number:newNumber}
+                personService.update(person.id, updatedPerson)
+                    .then(returnedPerson => {
+                        setPersons(persons.map(person => person.id !== updatedPerson.id ? person : returnedPerson))
+                        setNewName('')
+                        setNewNumber('')
+                        return
+                    })
+            }
+            else {
+                alert(`${newName} is already added to phonebook`) 
+                return
+            }        
         }
-        const personObject = {name:newName, number:newNumber}
-        personService
-            .create(personObject)
-            .then(returnedPerson => {
-                setPersons(persons.concat(returnedPerson))
-                setNewName('')
-                setNewNumber('')
-            })
-        //setPersons(persons.map(person => person.id !== id ? person : response.data))
-            .catch(error => {
-                console.log('fail', error)
-            })
+        else{
+            console.log("for whaterver reasons")
+            const personObject = {name:newName, number:newNumber}
+            personService
+                .create(personObject)
+                .then(returnedPerson => {
+                    setPersons(persons.concat(returnedPerson))
+                    setNewName('')
+                    setNewNumber('')
+                })
+                .catch(error => {
+                    console.log('fail', error)
+                })
+        }        
     }
 
 
