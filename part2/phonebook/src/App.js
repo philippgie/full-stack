@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import {Filter, PersonForm, Persons} from './components/File'
 import axios from 'axios'
+import personService from './services/persons'
 
 const App = () => {
     const [persons, setPersons] = useState([
@@ -43,14 +44,14 @@ const App = () => {
             return
         }
         const personObject = {name:newName, number:newNumber}
-        setNewName('')
-        setNewNumber('')
-        axios
-            .post(`http://localhost:3001/persons`, personObject)
-            .then(response => {
-                      //setPersons(persons.map(person => person.id !== id ? person : response.data))
-                      setPersons(persons.concat(response.data))
+        personService
+            .create(personObject)
+            .then(returnedPerson => {
+                setPersons(persons.concat(returnedPerson))
+                setNewName('')
+                setNewNumber('')
             })
+        //setPersons(persons.map(person => person.id !== id ? person : response.data))
             .catch(error => {
                 console.log('fail', error)
             })
