@@ -25,13 +25,13 @@ const Persons = ({contactsToShow}) => {
     return (
 
         <ul>
-            {contactsToShow.map(person=><Person name={person.name} number={person.number}/>)}
+            {contactsToShow.map(person=><Person key={person.name} name={person.name} number={person.number}/>)}
         </ul>
     )
 }
 const Person = ({name, number}) => {
     return  (
-        <p key={name}>
+        <p>
             {name} {number}
         </p>
     )
