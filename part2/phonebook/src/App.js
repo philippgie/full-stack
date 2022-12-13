@@ -2,13 +2,15 @@ import { useState, useEffect } from 'react'
 import {Filter, PersonForm, Persons} from './components/File'
 import axios from 'axios'
 import personService from './services/persons'
+import './index.css'
+
 
 const App = () => {
     const [persons, setPersons] = useState([]) 
     const [newName, setNewName] = useState('')
     const [newNumber, setNewNumber] = useState('')
     const [newSearch, setNewSearch] = useState('')
-
+    const [errorMessage, setErrorMessage] = useState(null)
 
     useEffect(() => {
         console.log('effect')
@@ -19,6 +21,18 @@ const App = () => {
                 setPersons(response.data)
             })
     }, [])
+
+    const Notification = ({ message }) => {
+        if (message === null) {
+            return null
+        }
+
+        return (
+            <div className='error'>
+                {message}
+            </div>
+        )
+    }
 
     const handlePersonChange = (event) => {
         console.log(event.target.value)
@@ -46,6 +60,12 @@ const App = () => {
                         setPersons(persons.map(person => person.id !== updatedPerson.id ? person : returnedPerson))
                         setNewName('')
                         setNewNumber('')
+                        setErrorMessage(
+                            `Contact '${returnedPerson.name}' was changed`
+                        )
+                        setTimeout(() => {
+                            setErrorMessage(null)
+                        }, 5000)
                         return
                     })
             }
@@ -55,7 +75,6 @@ const App = () => {
             }        
         }
         else{
-            console.log("for whaterver reasons")
             const personObject = {name:newName, number:newNumber}
             personService
                 .create(personObject)
@@ -63,6 +82,12 @@ const App = () => {
                     setPersons(persons.concat(returnedPerson))
                     setNewName('')
                     setNewNumber('')
+                    setErrorMessage(
+                        `Contact '${returnedPerson.name}' was added to server`
+                    )
+                    setTimeout(() => {
+                        setErrorMessage(null)
+                    }, 5000)
                 })
                 .catch(error => {
                     console.log('fail', error)
@@ -95,6 +120,7 @@ const App = () => {
     return (
         <div>
             <h2>Phonebook</h2>
+            <Notification message={errorMessage} />
             <Filter state={newSearch} handler={handleSearchChange}/>
             <h2>add a new</h2>
             <PersonForm submitHandler={addPerson} nameState={newName} numberState={newNumber} personHandler={handlePersonChange} numberHandler={handleNumberChange}/>
