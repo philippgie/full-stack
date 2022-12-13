@@ -11,6 +11,7 @@ const App = () => {
     const [newNumber, setNewNumber] = useState('')
     const [newSearch, setNewSearch] = useState('')
     const [errorMessage, setErrorMessage] = useState(null)
+    const [remarkMessage, setRemarkMessage] = useState(null)
 
     useEffect(() => {
         console.log('effect')
@@ -22,13 +23,25 @@ const App = () => {
             })
     }, [])
 
-    const Notification = ({ message }) => {
+    const ErrorNotification = ({ message }) => {
         if (message === null) {
             return null
         }
 
         return (
             <div className='error'>
+                {message}
+            </div>
+        )
+    }
+
+    const Notification = ({ message }) => {
+        if (message === null) {
+            return null
+        }
+
+        return (
+            <div className='remark'>
                 {message}
             </div>
         )
@@ -60,14 +73,25 @@ const App = () => {
                         setPersons(persons.map(person => person.id !== updatedPerson.id ? person : returnedPerson))
                         setNewName('')
                         setNewNumber('')
-                        setErrorMessage(
+                        setRemarkMessage(
                             `Contact '${returnedPerson.name}' was changed`
+                        )
+                        setTimeout(() => {
+                            setRemarkMessage(null)
+                        }, 5000)
+                        return
+                    })
+                    .catch(() =>{
+                        setPersons(persons.filter(n => n.id !== person.idid))
+                        setErrorMessage(
+                            `Contact '${person.name}' was already deleted from the server`
                         )
                         setTimeout(() => {
                             setErrorMessage(null)
                         }, 5000)
-                        return
-                    })
+                    }
+
+                    )
             }
             else {
                 alert(`${newName} is already added to phonebook`) 
@@ -82,11 +106,11 @@ const App = () => {
                     setPersons(persons.concat(returnedPerson))
                     setNewName('')
                     setNewNumber('')
-                    setErrorMessage(
+                    setRemarkMessage(
                         `Contact '${returnedPerson.name}' was added to server`
                     )
                     setTimeout(() => {
-                        setErrorMessage(null)
+                        setRemarkMessage(null)
                     }, 5000)
                 })
                 .catch(error => {
@@ -120,7 +144,8 @@ const App = () => {
     return (
         <div>
             <h2>Phonebook</h2>
-            <Notification message={errorMessage} />
+            <Notification message={remarkMessage} />
+            <ErrorNotification message={errorMessage} />
             <Filter state={newSearch} handler={handleSearchChange}/>
             <h2>add a new</h2>
             <PersonForm submitHandler={addPerson} nameState={newName} numberState={newNumber} personHandler={handlePersonChange} numberHandler={handleNumberChange}/>
