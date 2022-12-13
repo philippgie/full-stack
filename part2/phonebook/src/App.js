@@ -4,9 +4,7 @@ import axios from 'axios'
 import personService from './services/persons'
 
 const App = () => {
-    const [persons, setPersons] = useState([
-        {name: 'Arto Hellas', number:"+49123456789"}
-    ]) 
+    const [persons, setPersons] = useState([]) 
     const [newName, setNewName] = useState('')
     const [newNumber, setNewNumber] = useState('')
     const [newSearch, setNewSearch] = useState('')
@@ -57,6 +55,23 @@ const App = () => {
             })
     }
 
+
+    const deletePerson = id => {
+        const person = persons.find(n => n.id === id)
+        if(window.confirm(`Delete $(person.name)`)){
+            personService
+                .del(id)
+                .then(returnedData => {
+                    setPersons(persons.filter(n => n.id !== id))
+                })
+                .catch(error => {
+                    alert(
+                        `the note '${person.name}' was already deleted from server`
+                    )
+                })
+        }        
+    }
+
     const contactsToShow = !newSearch
         ? persons
         : persons.filter(person => person.name.toLowerCase().includes(newSearch.toLowerCase()))
@@ -69,7 +84,7 @@ const App = () => {
             <h2>add a new</h2>
             <PersonForm submitHandler={addPerson} nameState={newName} numberState={newNumber} personHandler={handlePersonChange} numberHandler={handleNumberChange}/>
             <h2>Numbers</h2>
-            <Persons contactsToShow={contactsToShow}/>
+            <Persons contactsToShow={contactsToShow} deletePerson={deletePerson}/>
         </div>
     )
 }

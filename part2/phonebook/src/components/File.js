@@ -21,18 +21,21 @@ const PersonForm = ({submitHandler, nameState, numberState, personHandler, numbe
 
     )
 }
-const Persons = ({contactsToShow}) => {
+const Persons = ({contactsToShow, deletePerson}) => {
     return (
 
         <ul>
-            {contactsToShow.map(person=><Person key={person.name} name={person.name} number={person.number}/>)}
+            {contactsToShow.map(person=><Person key={person.name} person={person} deletePerson={deletePerson}/>)}
         </ul>
     )
 }
-const Person = ({name, number}) => {
+const Person = ({person, deletePerson}) => {
     return  (
         <p>
-            {name} {number}
+            {person.name} {person.number} 
+            <button onClick={() => deletePerson(person.id)}>
+               delete 
+            </button>
         </p>
     )
 }
