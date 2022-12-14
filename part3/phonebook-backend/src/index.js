@@ -26,7 +26,7 @@ let persons = [
 ]
 
 app.use(express.json())
-app.use(morgan('tiny'))
+app.use(morgan(':method :url :status :response-time ms - :body'))
 
 app.get('/', (req, res) => {
     res.send('<h1>Hello World!</h1>')
@@ -38,6 +38,7 @@ const generateId = () => {
 
 app.post('/api/persons', (request, response) => {
     const body = request.body
+    morgan.token('body', request => JSON.stringify(request.body))
 
     if (!body.name | !body.number) {
         return response.status(400).json({ 
