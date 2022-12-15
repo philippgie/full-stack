@@ -1,8 +1,13 @@
+require('dotenv').config()
 const express = require('express')
 const morgan = require('morgan')
 const cors = require('cors')
+const mongoose = require('mongoose')
+const Person = require('./models/person')
+
 
 const app = express()
+
 
 let persons = [
     { 
@@ -27,14 +32,15 @@ let persons = [
     }
 ]
 
-app.use(express.static('build'))
 app.use(express.json())
- app.use((req, res, next) => {
-     morgan.token('body', request => request?JSON.stringify(request.body):null)
-    next();
-  });
-app.use(morgan(':method :url :status :response-time ms - :body'))
 app.use(cors())
+app.use(express.static('build'))
+app.use((req, res, next) => {
+    morgan.token('body', request => request.body?JSON.stringify(request.body):null)
+    next();
+});
+app.use(morgan(':method :url :status :response-time ms - :body'))
+
 
 
 app.get('/', (req, res) => {
@@ -74,7 +80,13 @@ app.post('/api/persons', (request, response) => {
 })
 
 app.get('/api/persons', (req, res) => {
-    res.json(persons)
+    Person.find({})
+        .then(persons => {
+            res.json(persons)
+            console.log(persons)
+            //mongoose.connection.close()
+        })
+    //res.json(persons)
 })
 
 app.delete('/api/persons/:id', (request, response) => {
@@ -86,13 +98,18 @@ app.delete('/api/persons/:id', (request, response) => {
 
 app.get('/api/persons/:id', (request, response) => {
     const id = Number(request.params.id)
-    const person = persons.find(person => person.id === id)
 
-    if (person) {
+    console.log(id)
+    Person.findById(request.params.id).then(person => {
+        console.log('here2',response)
         response.json(person)
-    } else {
-        response.status(404).end()
-    }
+    })
+
+    //if (person) {
+    //    response.json(person)
+    //} else {
+    //    response.status(404).end()
+    //}
 })
 
 app.get('/info', (req, res) => {
@@ -101,5 +118,5 @@ app.get('/info', (req, res) => {
 
 const PORT = process.env.PORT || 3001
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`)
+    console.log(`Server running on port ${PORT}`)
 })
