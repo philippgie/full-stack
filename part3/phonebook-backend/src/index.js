@@ -55,7 +55,7 @@ app.post('/api/persons', (request, response) => {
     const body = request.body
     morgan.token('body', request => JSON.stringify(request.body))
 
-    if (!body.name | !body.number) {
+    if ((body.name === undefined) | (body.number === undefined)) {
         return response.status(400).json({ 
             error: 'missing data' 
         })
@@ -66,17 +66,14 @@ app.post('/api/persons', (request, response) => {
         })
     }
 
-    const person = {
+    const person = new Person({
         name: body.name,
         number: body.number,
-        //important: body.important || false,
-        date: new Date(),
-        id: generateId(),
-    }
+    })
 
-    persons = persons.concat(person)
-
-    response.json(person)
+    person.save().then(savedPerson => {
+        response.json(savedPerson)
+    })
 })
 
 app.get('/api/persons', (req, res) => {
@@ -104,12 +101,6 @@ app.get('/api/persons/:id', (request, response) => {
         console.log('here2',response)
         response.json(person)
     })
-
-    //if (person) {
-    //    response.json(person)
-    //} else {
-    //    response.status(404).end()
-    //}
 })
 
 app.get('/info', (req, res) => {
