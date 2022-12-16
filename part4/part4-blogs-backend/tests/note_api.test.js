@@ -1,5 +1,6 @@
 const mongoose = require('mongoose')
 const supertest = require('supertest')
+const helper = require('./test_helper')
 const app = require('../app')
 
 const api = supertest(app)
@@ -21,10 +22,7 @@ const initialBlogs = [
 
 beforeEach(async () => {
     await Blog.deleteMany({})
-    let blogObject = new Blog(initialBlogs[0])
-    await blogObject.save()
-    blogObject = new Blog(initialBlogs[1])
-    await blogObject.save()
+    await Blog.insertMany(helper.initialBlogs)
 })
 
 test('blogs are returned as json', async () => {
@@ -47,6 +45,12 @@ test('a blog is about the first blog post', async () => {
     expect(titles).toContain(
         'first blog'
     )
+})
+
+test('identifier property is named id', async () => {
+    const response = await api.get('/api/blogs')
+    const blog = response.body[0]
+    expect(blog.id).toBeDefined()
 })
 
 afterAll(() => {
