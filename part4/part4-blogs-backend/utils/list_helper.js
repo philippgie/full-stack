@@ -19,9 +19,24 @@ const favoriteBlog = (blogs) => {
     }
 }
 
-module.exports = {
-  dummy,
-    totalLikes,
-    favoriteBlog
+const mostBlogs = (blogs) => {
+    if(!blogs.length)return
+    const frequency = blogs.reduce((acc, curr) => {
+        if (curr.author in acc) {
+            acc[curr.author]++;
+        } else {
+            acc[curr.author] = 1;
+        }
+        return acc;
+    }, {});
 
+    const sortedFrequency = Object.entries(frequency).sort((a, b) => b[1] - a[1]);
+        return {author:sortedFrequency[0][0], count:sortedFrequency[0][1]};
+}
+
+module.exports = {
+    dummy,
+    totalLikes,
+    favoriteBlog,
+    mostBlogs
 }
