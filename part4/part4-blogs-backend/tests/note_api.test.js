@@ -92,6 +92,28 @@ test('likes are defaulted to zero', async () => {
   expect(result.body.likes).toBe(0)
 })
 
+test('a not-valid blog canno be added ', async () => {
+  const noTitleBlog = {
+    author: 'uncreatie Olli',
+    url: 'olli.com'
+  }
+
+  await api
+    .post('/api/blogs')
+    .send(noTitleBlog)
+    .expect(400)
+
+  const noAuthorBlog = {
+    title: 'Author is missing',
+    url: 'olli.com'
+  }
+
+  await api
+    .post('/api/blogs')
+    .send(noAuthorBlog)
+    .expect(400)
+})
+
 afterAll(() => {
     mongoose.connection.close()
 })
