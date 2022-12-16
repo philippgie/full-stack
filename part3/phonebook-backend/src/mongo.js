@@ -24,13 +24,13 @@ if(process.argv.length===5){
         number: process.argv[4],
     })
     person.save()
-        .then(result => {
+        .then(() => {
             mongoose.connection.close()
         })
 }else{
     Person.find({})
         .then(result => {
-            console.log("phonebook:")
+            console.log('phonebook:')
             result.forEach(person => {
                 console.log(person.name, person.number)
             })

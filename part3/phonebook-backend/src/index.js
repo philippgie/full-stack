@@ -2,7 +2,6 @@ require('dotenv').config()
 const express = require('express')
 const morgan = require('morgan')
 const cors = require('cors')
-const mongoose = require('mongoose')
 const Person = require('./models/person')
 
 
@@ -10,35 +9,35 @@ const app = express()
 
 
 let persons = [
-    { 
-        "id": 1,
-        "name": "Arto Hellas", 
-        "number": "040-123456"
+    {
+        'id': 1,
+        'name': 'Arto Hellas',
+        'number': '040-123456'
     },
-    { 
-        "id": 2,
-        "name": "Ada Lovelace", 
-        "number": "39-44-5323523"
+    {
+        'id': 2,
+        'name': 'Ada Lovelace',
+        'number': '39-44-5323523'
     },
-    { 
-        "id": 3,
-        "name": "Dan Abramov", 
-        "number": "12-43-234345"
+    {
+        'id': 3,
+        'name': 'Dan Abramov',
+        'number': '12-43-234345'
     },
-    { 
-        "id": 4,
-        "name": "Mary Poppendieck", 
-        "number": "39-23-6423122"
+    {
+        'id': 4,
+        'name': 'Mary Poppendieck',
+        'number': '39-23-6423122'
     }
 ]
 
 app.use(express.json())
 app.use(cors())
 app.use(express.static('build'))
-app.use((req, res, next) => {
+app.use((request, response, next) => {
     morgan.token('body', request => request.body?JSON.stringify(request.body):null)
-    next();
-});
+    next()
+})
 app.use(morgan(':method :url :status :response-time ms - :body'))
 
 
@@ -47,9 +46,6 @@ app.get('/', (req, res) => {
     res.send('<h1>Hello World!</h1>')
 })
 
-const generateId = () => {
-    return Math.round(Math.random()*0xffffffff)
-}
 
 const errorHandler = (error, request, response, next) => {
     console.error(error.message)
@@ -68,13 +64,13 @@ app.post('/api/persons', (request, response, next) => {
     morgan.token('body', request => JSON.stringify(request.body))
 
     if ((body.name === undefined) | (body.number === undefined)) {
-        return response.status(400).json({ 
-            error: 'missing data' 
+        return response.status(400).json({
+            error: 'missing data'
         })
     }
     if (persons.some(person => person.name === body.name)) {
-        return response.status(400).json({ 
-            error: 'name must be unique' 
+        return response.status(400).json({
+            error: 'name must be unique'
         })
     }
 
@@ -89,12 +85,11 @@ app.post('/api/persons', (request, response, next) => {
         .catch(error => next(error))
 })
 
-app.get('/api/persons', (req, res, next) => {
+app.get('/api/persons', (req, res) => {
     Person.find({})
         .then(persons => {
             res.json(persons)
             console.log(persons)
-            //mongoose.connection.close()
         })
     //res.json(persons)
 })
@@ -102,7 +97,7 @@ app.get('/api/persons', (req, res, next) => {
 
 app.delete('/api/persons/:id', (request, response, next) => {
     Person.findByIdAndRemove(request.params.id)
-        .then(result => {
+        .then(() => {
             response.status(204).end()
         })
         .catch(error => next(error))
