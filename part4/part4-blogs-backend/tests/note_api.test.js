@@ -75,6 +75,23 @@ test('a valid blog can be added ', async () => {
   )
 })
 
+test('likes are defaulted to zero', async () => {
+  const newBlog = {
+    title: 'async/await simplifies making async calls',
+    author: 'Olli 2',
+    url: 'olli2.com'
+  }
+
+  const createdBlog = await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(201)
+    .expect('Content-Type', /application\/json/)
+
+  const result = await api.get(`/api/blogs/${createdBlog.body.id}`)
+  expect(result.body.likes).toBe(0)
+})
+
 afterAll(() => {
     mongoose.connection.close()
 })
