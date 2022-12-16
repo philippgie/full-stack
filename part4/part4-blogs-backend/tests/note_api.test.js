@@ -54,64 +54,95 @@ test('identifier property is named id', async () => {
 })
 
 test('a valid blog can be added ', async () => {
-  const newBlog = {
-    title: 'async/await simplifies making async calls',
-    author: 'Olli',
-    url: 'olli.com'
-  }
+    const newBlog = {
+        title: 'async/await simplifies making async calls',
+        author: 'Olli',
+        url: 'olli.com'
+    }
 
-  await api
-    .post('/api/blogs')
-    .send(newBlog)
-    .expect(201)
-    .expect('Content-Type', /application\/json/)
+    await api
+        .post('/api/blogs')
+        .send(newBlog)
+        .expect(201)
+        .expect('Content-Type', /application\/json/)
 
-  const blogsAtEnd = await helper.blogsInDb()
-  expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length + 1)
+    const blogsAtEnd = await helper.blogsInDb()
+    expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length + 1)
 
-  const titles = blogsAtEnd.map(n => n.title)
-  expect(titles).toContain(
-    'async/await simplifies making async calls'
-  )
+    const titles = blogsAtEnd.map(n => n.title)
+    expect(titles).toContain(
+        'async/await simplifies making async calls'
+    )
 })
 
 test('likes are defaulted to zero', async () => {
-  const newBlog = {
-    title: 'async/await simplifies making async calls',
-    author: 'Olli 2',
-    url: 'olli2.com'
-  }
+    const newBlog = {
+        title: 'async/await simplifies making async calls',
+        author: 'Olli 2',
+        url: 'olli2.com'
+    }
 
-  const createdBlog = await api
-    .post('/api/blogs')
-    .send(newBlog)
-    .expect(201)
-    .expect('Content-Type', /application\/json/)
+    const createdBlog = await api
+        .post('/api/blogs')
+        .send(newBlog)
+        .expect(201)
+        .expect('Content-Type', /application\/json/)
 
-  const result = await api.get(`/api/blogs/${createdBlog.body.id}`)
-  expect(result.body.likes).toBe(0)
+    const result = await api.get(`/api/blogs/${createdBlog.body.id}`)
+    expect(result.body.likes).toBe(0)
 })
 
 test('a not-valid blog canno be added ', async () => {
-  const noTitleBlog = {
-    author: 'uncreatie Olli',
-    url: 'olli.com'
-  }
+    const noTitleBlog = {
+        author: 'uncreatie Olli',
+        url: 'olli.com'
+    }
 
-  await api
-    .post('/api/blogs')
-    .send(noTitleBlog)
-    .expect(400)
+    await api
+        .post('/api/blogs')
+        .send(noTitleBlog)
+        .expect(400)
 
-  const noAuthorBlog = {
-    title: 'Author is missing',
-    url: 'olli.com'
-  }
+    const noAuthorBlog = {
+        title: 'Author is missing',
+        url: 'olli.com'
+    }
 
-  await api
-    .post('/api/blogs')
-    .send(noAuthorBlog)
-    .expect(400)
+    await api
+        .post('/api/blogs')
+        .send(noAuthorBlog)
+        .expect(400)
+})
+
+test('a blog can be deleted', async () => {
+    const blogsAtStart = await helper.blogsInDb()
+    const blogToDelete = blogsAtStart[0]
+
+    await api
+        .delete(`/api/blogs/${blogToDelete.id}`)
+        .expect(204)
+
+    const blogsAtEnd = await helper.blogsInDb()
+
+    expect(blogsAtEnd).toHaveLength(
+        helper.initialBlogs.length - 1
+    )
+
+    const titles = blogsAtEnd.map(r => r.titles)
+
+    expect(titles).not.toContain(blogToDelete.title)
+})
+
+test('a blog can be modified', async () => {
+    const blogsAtStart = await helper.blogsInDb()
+    const blogToModify = blogsAtStart[0]
+
+    const resp = await api
+        .put(`/api/blogs/${blogToModify.id}`)
+        .send({...blogToModify,likes:blogToModify.likes+1})
+        .expect(200)
+
+    expect(blogToModify).not.toEqual(resp.body)
 })
 
 afterAll(() => {
