@@ -74,8 +74,14 @@ test('a valid blog can be added ', async () => {
         url: 'olli.com'
     }
 
+    const loginResult = await api.post('/api/login').send({
+        'password':initialUsers[0].password,
+        'username':initialUsers[0].username,
+        })
+
     await api
         .post('/api/blogs')
+        .set({'Authorization': `Bearer ${loginResult.body.token}`})
         .send(newBlog)
         .expect(201)
         .expect('Content-Type', /application\/json/)
@@ -101,10 +107,9 @@ test('likes are defaulted to zero', async () => {
         'username':initialUsers[0].username,
         })
 
-    console.log(loginResult.body.token)
     const createdBlog = await api
         .post('/api/blogs')
-        .set({'Authorization': loginResult.body.token})
+        .set({'Authorization': `Bearer ${loginResult.body.token}`})
         .send(newBlog)
         .expect(201)
         .expect('Content-Type', /application\/json/)
@@ -113,14 +118,34 @@ test('likes are defaulted to zero', async () => {
     expect(result.body.likes).toBe(0)
 })
 
+test('blog cannot be created without creds', async () => {
+    const newBlog = {
+        title: 'async/await simplifies making async calls',
+        author: 'Olli 2',
+        url: 'olli2.com'
+    }
+
+
+    const createdBlog = await api
+        .post('/api/blogs')
+        .send(newBlog)
+        .expect(401)
+})
+
 test('a not-valid blog canno be added ', async () => {
     const noTitleBlog = {
         author: 'uncreatie Olli',
         url: 'olli.com'
     }
 
+    const loginResult = await api.post('/api/login').send({
+        'password':initialUsers[0].password,
+        'username':initialUsers[0].username,
+        })
+
     await api
         .post('/api/blogs')
+        .set({'Authorization': `Bearer ${loginResult.body.token}`})
         .send(noTitleBlog)
         .expect(400)
 
@@ -131,30 +156,58 @@ test('a not-valid blog canno be added ', async () => {
 
     await api
         .post('/api/blogs')
+        .set({'Authorization': `Bearer ${loginResult.body.token}`})
         .send(noAuthorBlog)
         .expect(400)
 })
 
 test('a blog can be deleted', async () => {
-    const blogsAtStart = await helper.blogsInDb()
-    const blogToDelete = blogsAtStart[0]
+    const newBlog = {
+        title: 'async/await simplifies making async calls',
+        author: 'Olli',
+        url: 'olli.com'
+    }
+
+    const loginResult = await api.post('/api/login').send({
+        'password':initialUsers[0].password,
+        'username':initialUsers[0].username,
+        })
+
+    const createdBlog = await api
+        .post('/api/blogs')
+        .set({'Authorization': `Bearer ${loginResult.body.token}`})
+        .send(newBlog)
+        .expect(201)
+        .expect('Content-Type', /application\/json/)
+
+    const blogsAfterInsert = await helper.blogsInDb()
+    expect(blogsAfterInsert).toHaveLength(
+        helper.initialBlogs.length + 1
+    )
 
     await api
-        .delete(`/api/blogs/${blogToDelete.id}`)
+        .delete(`/api/blogs/${createdBlog.body.id}`)
+        .set({'Authorization': `Bearer ${loginResult.body.token}`})
         .expect(204)
 
     const blogsAtEnd = await helper.blogsInDb()
 
     expect(blogsAtEnd).toHaveLength(
-        helper.initialBlogs.length - 1
+        helper.initialBlogs.length
     )
 
     const titles = blogsAtEnd.map(r => r.titles)
 
-    expect(titles).not.toContain(blogToDelete.title)
+    expect(titles).not.toContain(createdBlog.body.title)
 })
 
 test('a blog can be modified', async () => {
+    const newBlog = {
+        title: 'async/await simplifies making async calls',
+        author: 'Olli',
+        url: 'olli.com'
+    }
+
     const loginResult = await api.post('/api/login').send({
         'password':initialUsers[0].password,
         'username':initialUsers[0].username,
@@ -162,10 +215,19 @@ test('a blog can be modified', async () => {
     const blogsAtStart = await helper.blogsInDb()
     const blogToModify = blogsAtStart[0]
 
+    const createdBlog = await api
+        .post('/api/blogs')
+        .set({'Authorization': `Bearer ${loginResult.body.token}`})
+        .send(newBlog)
+        .expect(201)
+        .expect('Content-Type', /application\/json/)
+
+
+
     const resp = await api
         .put(`/api/blogs/${blogToModify.id}`)
-        .set('Authorization', loginResult.body.token)
-        .send({...blogToModify,likes:blogToModify.likes+1})
+        .set({'Authorization': `Bearer ${loginResult.body.token}`})
+        .send({...createdBlog,likes:createdBlog.likes+1})
         .expect(200)
 
     expect(blogToModify).not.toEqual(resp.body)
