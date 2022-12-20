@@ -45,6 +45,7 @@ const App = () => {
             window.localStorage.setItem(
                 'loggedBlogappUser', JSON.stringify(user)
             )
+            setErrorMessage('successful authentication')
             setUsername('')
             setPassword('')
         } catch (exception) {
@@ -72,7 +73,11 @@ const App = () => {
                 setNewURL('')
                 setNewAuthor('')
                 setNewTitle('')
-            })
+                setErrorMessage('a new blog was added')
+            }).
+            catch(()=>{
+                setErrorMessage('an error ocurred while adding the blogg')
+            })            
     }
 
     const handleURLChange = (event) => {
@@ -164,13 +169,13 @@ const App = () => {
                     <div>
                         <p>{user.name} logged in</p>
                         {blogForm()}
-                <button onClick={() => {
-                    window.localStorage.clear()
-                    setUser(null)
-                }}>
-                    logout
-                </button>
-            </div>
+                        <button onClick={() => {
+                            window.localStorage.clear()
+                            setUser(null)
+                        }}>
+                            logout
+                        </button>
+                    </div>
             }
             <ul>
                 {blogsToShow.map(blog =>
