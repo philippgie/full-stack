@@ -4,6 +4,8 @@ import blogService from './services/blogs'
 
 import Notification from './components/Notification'
 import Footer from './components/Footer'
+import Togglable from './components/Togglable'
+import LoginForm from './components/LoginForm'
 import loginService from './services/login'
 
 const App = () => {
@@ -49,7 +51,6 @@ const App = () => {
             setUsername('')
             setPassword('')
         } catch (exception) {
-            console.log(exception)
             setErrorMessage('wrong credentials')
             setTimeout(() => {
                 setErrorMessage(null)
@@ -74,8 +75,8 @@ const App = () => {
                 setNewAuthor('')
                 setNewTitle('')
                 setErrorMessage('a new blog was added')
-            }).
-            catch(()=>{
+            })
+            .catch(()=>{
                 setErrorMessage('an error ocurred while adding the blogg')
             })            
     }
@@ -114,30 +115,6 @@ const App = () => {
         ? blogs
         : blogs.filter(blog => blog.important)
 
-    const loginForm = () => (
-        <form onSubmit={handleLogin}>
-            <div>
-                username
-                <input
-                    type="text"
-                    value={username}
-                    name="Username"
-                    onChange={({ target }) => setUsername(target.value)}
-                />
-            </div>
-            <div>
-                password
-                <input
-                    type="password"
-                    value={password}
-                    name="Password"
-                    onChange={({ target }) => setPassword(target.value)}
-                />
-            </div>
-            <button type="submit">login</button>
-        </form>
-    )
-
     const blogForm = () => (
         <form onSubmit={addBlog}>
             Title
@@ -165,10 +142,18 @@ const App = () => {
             <Notification message={errorMessage} />
 
             {user === null ?
-                    loginForm() :
+                <LoginForm
+                    username={username}
+                    password={password}
+                    handleUsernameChange={({ target }) => setUsername(target.value)}
+                    handlePasswordChange={({ target }) => setPassword(target.value)}
+                    handleSubmit={handleLogin}
+                />:
                     <div>
                         <p>{user.name} logged in</p>
-                        {blogForm()}
+                        <Togglable buttonLabel='add blog'>
+                            {blogForm()}
+                        </Togglable>
                         <button onClick={() => {
                             window.localStorage.clear()
                             setUser(null)
