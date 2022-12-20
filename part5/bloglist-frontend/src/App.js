@@ -63,6 +63,7 @@ const App = () => {
             title: newTitle,
             url : newURL
         }
+        console.log(blogObject)
 
         blogService
             .create(blogObject)
@@ -75,13 +76,13 @@ const App = () => {
     }
 
     const handleURLChange = (event) => {
-        setNewURL(event.value)
+        setNewURL(event.target.value)
     }
     const handleAuthorChange = (event) => {
-        setNewAuthor(event.value)
+        setNewAuthor(event.target.value)
     }
     const handleTitleChange = (event) => {
-        setNewTitle(event.value)
+        setNewTitle(event.target.value)
     }
 
     const toggleImportanceOf = id => {
