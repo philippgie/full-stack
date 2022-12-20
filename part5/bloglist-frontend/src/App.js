@@ -6,13 +6,11 @@ import Notification from './components/Notification'
 import Footer from './components/Footer'
 import Togglable from './components/Togglable'
 import LoginForm from './components/LoginForm'
+import BlogForm from './components/BlogForm'
 import loginService from './services/login'
 
 const App = () => {
     const [blogs, setBlogs] = useState([])
-    const [newURL, setNewURL] = useState('')
-    const [newAuthor, setNewAuthor] = useState('')
-    const [newTitle, setNewTitle] = useState('')
     const [showAll, setShowAll] = useState(true)
     const [errorMessage, setErrorMessage] = useState(null)
     const [username, setUsername] = useState('')
@@ -58,22 +56,12 @@ const App = () => {
         }
     }
 
-    const addBlog = (event) => {
-        event.preventDefault()
-        const blogObject = {
-            author : newAuthor,
-            title: newTitle,
-            url : newURL
-        }
+    const addBlog = (blogObject) => {
         console.log(blogObject)
-
         blogService
             .create(blogObject)
             .then(returnedBlog => {
                 setBlogs(blogs.concat(returnedBlog))
-                setNewURL('')
-                setNewAuthor('')
-                setNewTitle('')
                 setErrorMessage('a new blog was added')
             })
             .catch(()=>{
@@ -81,15 +69,6 @@ const App = () => {
             })            
     }
 
-    const handleURLChange = (event) => {
-        setNewURL(event.target.value)
-    }
-    const handleAuthorChange = (event) => {
-        setNewAuthor(event.target.value)
-    }
-    const handleTitleChange = (event) => {
-        setNewTitle(event.target.value)
-    }
 
     const toggleImportanceOf = id => {
         const blog = blogs.find(n => n.id === id)
@@ -115,26 +94,6 @@ const App = () => {
         ? blogs
         : blogs.filter(blog => blog.important)
 
-    const blogForm = () => (
-        <form onSubmit={addBlog}>
-            Title
-            <input
-                value={newTitle}
-                onChange={handleTitleChange}
-            /><br/>
-            URL
-            <input
-                value={newURL}
-                onChange={handleURLChange}
-            /><br/>
-            Author
-            <input
-                value={newAuthor}
-                onChange={handleAuthorChange}
-            />
-            <button type="submit">save</button>
-        </form>
-    )
 
     return (
         <div>
@@ -152,7 +111,7 @@ const App = () => {
                     <div>
                         <p>{user.name} logged in</p>
                         <Togglable buttonLabel='add blog'>
-                            {blogForm()}
+                            <BlogForm createBlog={addBlog}/>
                         </Togglable>
                         <button onClick={() => {
                             window.localStorage.clear()
