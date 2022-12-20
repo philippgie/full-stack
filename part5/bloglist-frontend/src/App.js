@@ -126,7 +126,6 @@ const App = () => {
                 <Blog
                     key={blog.id}
                     blog={blog}
-                    toggleImportance={() => toggleImportanceOf(blog.id)}
                 />
                 )}
             </ul>
