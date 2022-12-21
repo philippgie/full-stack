@@ -69,26 +69,22 @@ const App = () => {
             })            
     }
 
-
-    const toggleImportanceOf = id => {
-        const blog = blogs.find(n => n.id === id)
-        const changedBlog = { ...blog, important: !blog.important }
-
+    const upvote = (blogObject) => {
+        const upvotedBlog = {...blogObject, likes:blogObject.likes+1}
         blogService
-            .update(id, changedBlog)
+            .update(blogObject.id, upvotedBlog)
             .then(returnedBlog => {
-                setBlogs(blogs.map(blog => blog.id !== id ? blog : returnedBlog))
+                //setBlogs(blogs.filter(blog => blogObject.id !== blog.id))
+                console.log(blogs.map(blog=>blog.likes))
+                setBlogs(blogs.filter(n=>n.id!==blogObject.id).concat(returnedBlog))
+                console.log(blogs.map(blog=>blog.likes))
+                setErrorMessage('a new blog was added')
             })
-            .catch(error => {
-                setErrorMessage(
-                    `Blog '${blog.title}' was already removed from server`
-                )
-                setTimeout(() => {
-                    setErrorMessage(null)
-                }, 5000)
-                setBlogs(blogs.filter(n => n.id !== id))
-            })
+            .catch(()=>{
+                setErrorMessage('an error ocurred while adding the blogg')
+            })            
     }
+
 
     const blogsToShow = showAll
         ? blogs
@@ -111,7 +107,7 @@ const App = () => {
                     <div>
                         <p>{user.name} logged in</p>
                         <Togglable buttonLabel='add blog'>
-                            <BlogForm createBlog={addBlog}/>
+                            <BlogForm createBlog={addBlog} />
                         </Togglable>
                         <button onClick={() => {
                             window.localStorage.clear()
@@ -126,6 +122,7 @@ const App = () => {
                 <Blog
                     key={blog.id}
                     blog={blog}
+                    upvote={upvote}
                 />
                 )}
             </ul>
