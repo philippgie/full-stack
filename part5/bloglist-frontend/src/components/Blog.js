@@ -14,7 +14,8 @@ const Blog = ({ blog, upvote, deleteBlog, showDelete }) => {
             {blog.title} {blog.author}
         </div>
         :
-        <div>
+        <div
+            id="blog">
             {blog.title} {blog.author}<button onClick={toggleHideDetails}>hide</button><br/>
             {blog.url}<br/>
             {blog.likes}<button onClick={() => upvote(blog)}>upvote</button><br/>

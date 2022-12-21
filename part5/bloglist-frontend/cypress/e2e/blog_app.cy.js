@@ -58,5 +58,32 @@ describe('Blog app', function() {
 
             cy.contains('a blog was deleted')
         })
+
+        it('Blogs are sorted by likes', function() {
+            cy.contains('add blog').click()
+            cy.get('#url').type('moreLikes')
+            cy.get('#title').type('mockTitle')
+            cy.get('#author').type('mockAuthor')
+            cy.contains('save').click()
+
+            cy.contains('view').click()
+            cy.contains('upvote').click()
+            cy.contains('upvote').click()
+
+            cy.visit('http://localhost:3000')
+            cy.contains('add blog').click()
+            cy.get('#url').type('lessLikes')
+            cy.get('#title').type('mockTitle')
+            cy.get('#author').type('mockAuthor')
+            cy.contains('save').click()
+
+            
+            cy.visit('http://localhost:3000')
+            cy.contains('view').click()
+            cy.contains('view').click()
+            cy.get('#blog').contains('lessLikes')
+            cy.contains('hide').click()
+            cy.get('#blog').contains('moreLikes')
+        })
     })
 })
