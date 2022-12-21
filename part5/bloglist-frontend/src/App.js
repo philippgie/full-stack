@@ -57,7 +57,6 @@ const App = () => {
     }
 
     const addBlog = (blogObject) => {
-        console.log(blogObject)
         blogService
             .create(blogObject)
             .then(returnedBlog => {
@@ -84,6 +83,19 @@ const App = () => {
                 setErrorMessage('an error ocurred while adding the blogg')
             })            
     }
+
+    const deleteBlog = (id) => {
+        blogService
+            .deleteEntry(id)
+            .then(() => {
+                setBlogs(blogs.filter(n=>n.id!==id))
+                setErrorMessage('a blog was deleted')
+            })
+            .catch(()=>{
+                setErrorMessage('an error ocurred while deleting the blogg')
+            })            
+    }
+
 
 
     const sortedBlogs = blogs.sort((a,b)=>a.likes-b.likes)
@@ -121,6 +133,8 @@ const App = () => {
                     key={blog.id}
                     blog={blog}
                     upvote={upvote}
+                    showDelete={blog.user.username===user.username}
+                    deleteBlog={deleteBlog}
                 />
                 )}
             </ul>
