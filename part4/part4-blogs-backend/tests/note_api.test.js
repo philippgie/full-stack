@@ -233,6 +233,8 @@ test('a blog can be modified', async () => {
     expect(blogToModify).not.toEqual(resp.body)
 })
 
-afterAll(() => {
+afterAll(async () => {
+    await Blog.deleteMany({})
+    await User.deleteMany({})
     mongoose.connection.close()
 })

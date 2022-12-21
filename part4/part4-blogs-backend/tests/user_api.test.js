@@ -146,5 +146,5 @@ test('a not-valid user canno be added ', async () => {
 //})
 
 afterAll(() => {
-    mongoose.connection.close()
+    User.deleteMany({}).then(()=>mongoose.connection.close())
 })
