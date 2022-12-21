@@ -11,7 +11,6 @@ import loginService from './services/login'
 
 const App = () => {
     const [blogs, setBlogs] = useState([])
-    const [showAll, setShowAll] = useState(true)
     const [errorMessage, setErrorMessage] = useState(null)
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
@@ -63,42 +62,42 @@ const App = () => {
                 setBlogs(blogs.concat(returnedBlog))
                 setErrorMessage('a new blog was added')
             })
-            .catch(()=>{
+            .catch(() => {
                 setErrorMessage('an error ocurred while adding the blogg')
-            })            
+            })
     }
 
     const upvote = (blogObject) => {
-        const upvotedBlog = {...blogObject, likes:blogObject.likes+1}
+        const upvotedBlog = { ...blogObject, likes:blogObject.likes+1 }
         blogService
             .update(blogObject.id, upvotedBlog)
             .then(returnedBlog => {
                 //setBlogs(blogs.filter(blog => blogObject.id !== blog.id))
-                console.log(blogs.map(blog=>blog.likes))
-                setBlogs(blogs.filter(n=>n.id!==blogObject.id).concat(returnedBlog))
-                console.log(blogs.map(blog=>blog.likes))
+                console.log(blogs.map(blog => blog.likes))
+                setBlogs(blogs.filter(n => n.id!==blogObject.id).concat(returnedBlog))
+                console.log(blogs.map(blog => blog.likes))
                 setErrorMessage('a new blog was added')
             })
-            .catch(()=>{
+            .catch(() => {
                 setErrorMessage('an error ocurred while adding the blogg')
-            })            
+            })
     }
 
     const deleteBlog = (id) => {
         blogService
             .deleteEntry(id)
             .then(() => {
-                setBlogs(blogs.filter(n=>n.id!==id))
+                setBlogs(blogs.filter(n => n.id!==id))
                 setErrorMessage('a blog was deleted')
             })
-            .catch(()=>{
+            .catch(() => {
                 setErrorMessage('an error ocurred while deleting the blogg')
-            })            
+            })
     }
 
 
 
-    const sortedBlogs = blogs.sort((a,b)=>a.likes-b.likes)
+    const sortedBlogs = blogs.sort((a,b) => a.likes-b.likes)
 
 
     return (
@@ -114,28 +113,28 @@ const App = () => {
                     handlePasswordChange={({ target }) => setPassword(target.value)}
                     handleSubmit={handleLogin}
                 />:
-                    <div>
-                        <p>{user.name} logged in</p>
-                        <Togglable buttonLabel='add blog'>
-                            <BlogForm createBlog={addBlog} />
-                        </Togglable>
-                        <button onClick={() => {
-                            window.localStorage.clear()
-                            setUser(null)
-                        }}>
+                <div>
+                    <p>{user.name} logged in</p>
+                    <Togglable buttonLabel='add blog'>
+                        <BlogForm createBlog={addBlog} />
+                    </Togglable>
+                    <button onClick={() => {
+                        window.localStorage.clear()
+                        setUser(null)
+                    }}>
                             logout
-                        </button>
-                    </div>
+                    </button>
+                </div>
             }
             <ul>
                 {sortedBlogs.map(blog =>
-                <Blog
-                    key={blog.id}
-                    blog={blog}
-                    upvote={upvote}
-                    showDelete={blog.user.username===user.username}
-                    deleteBlog={deleteBlog}
-                />
+                    <Blog
+                        key={blog.id}
+                        blog={blog}
+                        upvote={upvote}
+                        showDelete={blog.user.username===user.username}
+                        deleteBlog={deleteBlog}
+                    />
                 )}
             </ul>
 

@@ -1,7 +1,7 @@
-import {useState} from 'react'
+import { useState } from 'react'
 
 
-const Blog = ({blog, upvote, deleteBlog, showDelete}) => {
+const Blog = ({ blog, upvote, deleteBlog, showDelete }) => {
     const [hideDetails, setHideDetails] = useState(true)
 
     const toggleHideDetails = () => {
@@ -10,10 +10,10 @@ const Blog = ({blog, upvote, deleteBlog, showDelete}) => {
 
     return     hideDetails?
         <div>
-            <button onClick={toggleHideDetails}>view</button>
+            <button onClick={ toggleHideDetails }>view</button>
             {blog.title} {blog.author}
         </div>
-        :  
+        :
         <div>
             {blog.title} {blog.author}<button onClick={toggleHideDetails}>hide</button><br/>
             {blog.url}<br/>
