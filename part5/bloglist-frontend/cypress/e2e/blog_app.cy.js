@@ -25,7 +25,7 @@ describe('Blog app', function() {
             cy.contains('login').click()
             cy.contains('wrong credentials')
         })
-  })
+    })
 
     describe('When logged in', function() {
         beforeEach(function() {
@@ -43,6 +43,20 @@ describe('Blog app', function() {
 
             cy.contains('mockTitle')
             cy.contains('mockAuthor')
+        })
+
+        it('A blog can be deleted', function() {
+            cy.contains('add blog').click()
+            cy.get('#title').type('mockTitle')
+            cy.get('#url').type('mockURL')
+            cy.get('#author').type('mockAuthor')
+            cy.contains('save').click()
+
+
+            cy.contains('view').click()
+            cy.contains('delete').click()
+
+            cy.contains('a blog was deleted')
         })
     })
 })
