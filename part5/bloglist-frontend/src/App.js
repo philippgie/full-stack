@@ -130,7 +130,7 @@ const App = () => {
                         key={blog.id}
                         blog={blog}
                         upvote={upvote}
-                        showDelete={blog.user.username===user.username}
+                        showDelete={user && blog.user.username===user.username}
                         deleteBlog={deleteBlog}
                     />
                 )}
