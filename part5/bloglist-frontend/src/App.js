@@ -72,10 +72,9 @@ const App = () => {
         blogService
             .update(blogObject.id, upvotedBlog)
             .then(returnedBlog => {
-                //setBlogs(blogs.filter(blog => blogObject.id !== blog.id))
-                console.log(blogs.map(blog => blog.likes))
+                //console.log(blogs.map(blog => blog.likes))
                 setBlogs(blogs.filter(n => n.id!==blogObject.id).concat(returnedBlog))
-                console.log(blogs.map(blog => blog.likes))
+                //console.log(blogs.map(blog => blog.likes))
                 setErrorMessage('a new blog was added')
             })
             .catch(() => {
@@ -98,7 +97,6 @@ const App = () => {
 
 
     const sortedBlogs = blogs.sort((a,b) => a.likes-b.likes)
-
 
     return (
         <div>
