@@ -1,0 +1,21 @@
+Skript gestartet auf 2022-12-22 15:48:37+02:00 [TERM="xterm-256color" TTY="/dev/pts/0" COLUMNS="94" LINES="43"]
+WARNING: Running setxkbmap against an XWayland server
+]0;philipp@p200300d27f0290c58f0d8e840f843ad0:~/aalto/full-stack/part12/part12-containers-applications[?2004h[philipp@p200300d27f0290c58f0d8e840f843ad0 part12-containers-applications]$ docker container r un -it ubuntu bash
+[?2004ldocker: Got permission denied while trying to connect to the Docker daemon socket at unix:///var/run/docker.sock: Post "http://%2Fvar%2Frun%2Fdocker.sock/v1.24/containers/create": dial unix /var/run/docker.sock: connect: permission denied.
+See 'docker run --help'.
+]0;philipp@p200300d27f0290c58f0d8e840f843ad0:~/aalto/full-stack/part12/part12-containers-applications[?2004h[philipp@p200300d27f0290c58f0d8e840f843ad0 part12-containers-applications]$ sudo !!
+[?2004lsudo docker container run -it ubuntu bash
+[sudo] Passwort für philipp: 
+Unable to find image 'ubuntu:latest' locally
+latest: Pulling from library/ubuntu
+
+[1A[2K6e3729cf69e0: Pulling fs layer [1B[1A[2K6e3729cf69e0: Downloading  311.3kB/30.43MB[1B[1A[2K6e3729cf69e0: Downloading  1.874MB/30.43MB[1B[1A[2K6e3729cf69e0: Downloading  3.443MB/30.43MB[1B[1A[2K6e3729cf69e0: Downloading      5MB/30.43MB[1B[1A[2K6e3729cf69e0: Downloading  6.564MB/30.43MB[1B[1A[2K6e3729cf69e0: Downloading  8.125MB/30.43MB[1B[1A[2K6e3729cf69e0: Downloading  9.681MB/30.43MB[1B[1A[2K6e3729cf69e0: Downloading  11.23MB/30.43MB[1B[1A[2K6e3729cf69e0: Downloading   12.8MB/30.43MB[1B[1A[2K6e3729cf69e0: Downloading  14.04MB/30.43MB[1B[1A[2K6e3729cf69e0: Downloading  15.61MB/30.43MB[1B[1A[2K6e3729cf69e0: Downloading  17.17MB/30.43MB[1B[1A[2K6e3729cf69e0: Downloading  18.41MB/30.43MB[1B[1A[2K6e3729cf69e0: Downloading  20.59MB/30.43MB[1B[1A[2K6e3729cf69e0: Downloading  22.15MB/30.43MB[1B[1A[2K6e3729cf69e0: Downloading   23.7MB/30.43MB[1B[1A[2K6e3729cf69e0: Downloading  25.27MB/30.43MB[1B[1A[2K6e3729cf69e0: Downloading  26.82MB/30.43MB[1B[1A[2K6e3729cf69e0: Downloading  28.38MB/30.43MB[1B[1A[2K6e3729cf69e0: Downloading  29.94MB/30.43MB[1B[1A[2K6e3729cf69e0: Verifying Checksum [1B[1A[2K6e3729cf69e0: Download complete [1B[1A[2K6e3729cf69e0: Extracting  327.7kB/30.43MB[1B[1A[2K6e3729cf69e0: Extracting  3.277MB/30.43MB[1B[1A[2K6e3729cf69e0: Extracting  5.898MB/30.43MB[1B[1A[2K6e3729cf69e0: Extracting   8.52MB/30.43MB[1B[1A[2K6e3729cf69e0: Extracting  11.47MB/30.43MB[1B[1A[2K6e3729cf69e0: Extracting  14.75MB/30.43MB[1B[1A[2K6e3729cf69e0: Extracting  18.02MB/30.43MB[1B[1A[2K6e3729cf69e0: Extracting  21.63MB/30.43MB[1B[1A[2K6e3729cf69e0: Extracting  25.23MB/30.43MB[1B[1A[2K6e3729cf69e0: Extracting   27.2MB/30.43MB[1B[1A[2K6e3729cf69e0: Extracting  29.82MB/30.43MB[1B[1A[2K6e3729cf69e0: Extracting  30.43MB/30.43MB[1B[1A[2K6e3729cf69e0: Pull complete [1BDigest: sha256:27cb6e6ccef575a4698b66f5de06c7ecd61589132d5a91d098f7f3f9285415a9
+Status: Downloaded newer image for ubuntu:latest
+[?2004h]0;root@e09109468c09: /root@e09109468c09:/# [K]0;root@e09109468c09: /root@e09109468c09:/# mkdir /s usr/src/app
+[?2004l[?2004h]0;root@e09109468c09: /root@e09109468c09:/# touch /usr/src/app/index.js
+[?2004l[?2004h]0;root@e09109468c09: /root@e09109468c09:/# [Kexit
+[?2004lexit
+]0;philipp@p200300d27f0290c58f0d8e840f843ad0:~/aalto/full-stack/part12/part12-containers-applications[?2004h[philipp@p200300d27f0290c58f0d8e840f843ad0 part12-containers-applications]$ exit
+[?2004lexit
+
+Skript beendet auf 2022-12-22 15:49:44+02:00 [COMMAND_EXIT_CODE="0"]
