@@ -4,7 +4,7 @@ WORKDIR /usr/src/app
 
 COPY --chown=node:node . .
 
-RUN npm --force ci
+RUN npm install
 
 ENV DEBUG=playground:*
   
